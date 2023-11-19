@@ -61,6 +61,7 @@ int main()
       validos = cargarArreglo(arreglo,dim);
       muestraArreglo(arreglo,validos);
 
+    printf("Esto es un test\n");
     return 0;
 }
 
