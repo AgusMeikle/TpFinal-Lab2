@@ -61,6 +61,8 @@ int main()
       validos = cargarArreglo(arreglo,dim);
       muestraArreglo(arreglo,validos);
 
+      cargarArchivoDeCanciones("archivoCanciones.bin",arreglo,validos);
+
     return 0;
 }
 
@@ -229,7 +231,19 @@ unaCancion cargarUnaCancion(unaCancion dato)
       return dato;
 }
 
+void cargarArchivoDeCanciones(char archivo[],celda arreglo[], int validos)
+{
+      FILE * archi = fopen(archivo,"ab");
 
+      if(archi)
+      {
+            for(int i=0;i<validos;i++)
+            {
+                  fwrite(&arreglo[i],sizeof(celda),1,archi);
+            }
+            fclose(archi);
+      }
+}
 
 
 
