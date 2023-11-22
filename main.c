@@ -1,208 +1,42 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "stdlib.h"
+#include "string.h"
+#include "menu.h"
 
-/// estrucutras
 
-typedef struct{
-    int idCancion;
-    char titulo[30];
-    int duracion;
-    char album[20];
-    int anio;
-    char genero[20];
-    char comentario[100];
-    //int eliminado; ///indica 1 o 0 si fue eliminado o no
-}unaCancion;
-
-typedef struct{
-      unaCancion dato;
-    struct stCancion * siguiente;
-}stCancion;
-
-typedef struct{
-    stCancion * tema;
-    char artista[20];
-}celda;
-
-typedef struct{
-    int idUsuario;
-    char nombreUsuario[30];
-    char pass[20];
-    int anioNacimiento;
-    char genero;
-    char pais[20];
-    int playlist[50];
-    int cantidad;
-    int eliminado;
-    int admin;
-}stUsuario;
 
 /// PROTOTIPADOS
-stCancion * inicLista();
-stCancion * crearNodoCancion(unaCancion dato);
-stCancion * agregarAlFinal(stCancion * listita, stCancion * nuevoNodo);
 
-void inicArreglo(celda arreglo[],int dim);
-int verificarArreglo(celda arreglo[],int validos,char artista[]);
-int cargarArreglo(celda arreglo[], int dim);
-void muestraArreglo(celda arreglo[],int validos);
-void recorrerYmostrar(stCancion * listita);
-void escribir(stCancion * listita);
-unaCancion cargarUnaCancion(unaCancion dato);
+void escribir(stCancion dato);
+void mostrarArchivoDeCanciones(char archivo[]);
+stCancion cargarUnaCancion(stCancion dato);
+void cargarArchivoDeCanciones(char archivo[]);
 
 int main()
 {
-      int dim=10,validos=0;
 
-      celda arreglo[dim];
-      inicArreglo(arreglo,dim);
 
-      validos = cargarArreglo(arreglo,dim);
-      muestraArreglo(arreglo,validos);
+      //validos = cargarArreglo(arreglo,dim);
+      //muestraArreglo(arreglo,validos);
 
-      cargarArchivoDeCanciones("archivoCanciones.bin",arreglo,validos);
+      /// cargarArchivoDeCanciones("Canciones.dat");
+     // mostrarArchivoDeCanciones("Canciones.dat");
+      iniciarMenu();
 
     return 0;
 }
 
-/// FUNCIONES STCANCION
-stCancion * inicLista()
-{
-      return NULL;
-}
 
-stCancion * crearNodoCancion(unaCancion dato)
-{
-      stCancion * nuevoNodo = (stCancion*)malloc(sizeof(stCancion));
 
-      nuevoNodo->dato = dato;
-      nuevoNodo->siguiente = NULL;
-
-      return nuevoNodo;
-}
-
-stCancion * agregarAlFinal(stCancion * listita, stCancion * nuevoNodo)
-{
-      if(listita==NULL)
-      {
-            listita=nuevoNodo;
-      }
-      else
-      {
-            stCancion * aux = listita;
-
-            while(aux->siguiente != NULL)
-            {
-                  aux = aux->siguiente;
-            }
-
-            aux->siguiente = nuevoNodo;
-      }
-
-      return listita;
-}
-
-/// FUNCIONES ARREGLO
-void inicArreglo(celda arreglo[],int dim)
-{
-      for(int i=0;i<dim;i++)
-      {
-            arreglo[i].tema = inicLista();
-      }
-}
-
-int verificarArreglo(celda arreglo[],int validos,char artista[]) /// verificamps que exista el artista en el arreglo (puede ser recursiva)
-{
-      int pos=-1;
-
-      for(int i=0;i<validos;i++)
-      {
-            if(strcmpi(artista,arreglo[i].artista)==0)
-            {
-                  pos = i;
-            }
-      }
-
-      return pos;
-}
-
-int cargarArreglo(celda arreglo[], int dim)
-{
-      char artista[30],seguir;
-      int validos=0, pos;
-      unaCancion dato;
-      stCancion * nuevoNodo;
-
-      do
-      {
-            printf("Ingrese el nombre del artista: ");
-            fflush(stdin);
-            gets(artista);
-
-            pos = verificarArreglo(arreglo,validos,artista);
-
-            dato = cargarUnaCancion(dato);
-            nuevoNodo = crearNodoCancion(dato);
-
-            if(pos==-1)
-            {
-                  strcpy(arreglo[validos].artista,artista);
-
-                  arreglo[validos].tema = agregarAlFinal(arreglo[validos].tema,nuevoNodo);
-
-                  validos++;
-            }
-            else
-            {
-                  arreglo[pos].tema = agregarAlFinal(arreglo[pos].tema,nuevoNodo);
-            }
-
-            printf("Desea cargar otro artista? s/n: ");
-            fflush(stdin);
-            scanf("%c",&seguir);
-
-      }while(seguir=='s' && validos<dim);
-
-      return validos;
-}
-
-void muestraArreglo(celda arreglo[],int validos)
-{
-      for(int i=0;i<validos;i++)
-      {
-            printf("Artista: %s\n",arreglo[i].artista);
-            recorrerYmostrar(arreglo[i].tema);
-      }
-}
-
-void recorrerYmostrar(stCancion * listita)
-{
-      while(listita!=NULL)
-      {
-            escribir(listita);
-            listita = listita->siguiente;
-      }
-}
-
-void escribir(stCancion * listita)
-{
-      printf("-------------------------\n");
-      printf("ID de la cancion: %i\n",listita->dato.idCancion);
-      printf("Titulo: %s\n",listita->dato.titulo);
-      printf("Duracion (minutos): %i \n",listita->dato.duracion);
-      printf("Album: %s\n",listita->dato.album);
-      printf("Anio: %i\n",listita->dato.anio);
-      printf("Genero: %s\n",listita->dato.genero);
-      printf("Comentario: %s\n",listita->dato.comentario);
-      printf("-------------------------\n");
-}
-
-unaCancion cargarUnaCancion(unaCancion dato)
+stCancion cargarUnaCancion(stCancion dato)
 {
       printf("Ingrese el ID de la cancion: ");
       fflush(stdin);
       scanf("%i",&dato.idCancion);
+
+      printf("Ingrese el artista: ");
+      fflush(stdin);
+      gets(dato.artista);
 
       printf("Ingrese el titulo: ");
       fflush(stdin);
@@ -224,26 +58,55 @@ unaCancion cargarUnaCancion(unaCancion dato)
       fflush(stdin);
       scanf("%i",&dato.duracion);
 
-      printf("Deje un comentario sobre la cancion: ");
-      fflush(stdin);
-      gets(dato.comentario);
+      strcpy(dato.comentario,"Sin comentarios aun.");
 
       return dato;
 }
 
-void cargarArchivoDeCanciones(char archivo[],celda arreglo[], int validos)
+void cargarArchivoDeCanciones(char archivo[])
 {
       FILE * archi = fopen(archivo,"ab");
-
+        stCancion dato;
+        int a=10;
       if(archi)
       {
-            for(int i=0;i<validos;i++)
-            {
-                  fwrite(&arreglo[i],sizeof(celda),1,archi);
-            }
+        for(int i=0; i<a; i++)
+        {
+
+            dato = cargarUnaCancion(dato);
+
+            fwrite(&dato,sizeof(stCancion),1,archi);
+
+      }
+            fclose(archi);
+        }
+}
+
+
+void mostrarArchivoDeCanciones(char archivo[])
+{
+      FILE * archi = fopen(archivo,"rb");
+        stCancion dato;
+      if(archi)
+      {
+
+      while(fread(&dato,sizeof(stCancion),1,archi))
+      {
+            escribir(dato);
+      }
             fclose(archi);
       }
 }
 
-
-
+void escribir(stCancion dato)
+{
+      printf("-------------------------\n");
+      printf("ID de la cancion: %i\n",dato.idCancion);
+      printf("Titulo: %s\n",dato.titulo);
+      printf("Duracion (segundos): %i \n",dato.duracion);
+      printf("Album: %s\n",dato.album);
+      printf("Anio: %i\n",dato.anio);
+      printf("Genero: %s\n",dato.genero);
+      printf("Comentario: %s\n",dato.comentario);
+      printf("-------------------------\n");
+}

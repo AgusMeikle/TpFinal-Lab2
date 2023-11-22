@@ -1,6 +1,40 @@
 # depslib dependency file v1.0
-1700533024 source:g:\facultad\tpfinal lab2\main.c
+1700614223 source:g:\facultad\tpfinal lab2\main.c
 	<stdio.h>
+	"stdlib.h"
+	"string.h"
+	"menu.h"
+
+1700614223 source:g:\facultad\tpfinal lab2\menu.c
+	"menu.h"
+	"usuarios.h"
+
+1700614223 g:\facultad\tpfinal lab2\menu.h
+	<stdio.h>
+	<windows.h>
+	"playlist.h"
+
+1700614223 source:g:\facultad\tpfinal lab2\usuarios.c
+	"usuarios.h"
+
+1700614223 g:\facultad\tpfinal lab2\usuarios.h
+	<stdio.h>
+	<conio.h>
 	<stdlib.h>
 	<string.h>
+
+1700614223 source:g:\facultad\tpfinal lab2\canciones.c
+	"canciones.h"
+
+1700614223 g:\facultad\tpfinal lab2\canciones.h
+	<stdio.h>
+	<conio.h>
+	<stdlib.h>
+	<string.h>
+
+1700614223 g:\facultad\tpfinal lab2\playlist.h
+	"canciones.h"
+
+1700614223 source:g:\facultad\tpfinal lab2\playlist.c
+	"playlist.h"
 
