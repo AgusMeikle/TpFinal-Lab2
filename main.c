@@ -23,6 +23,7 @@ int main()
      // mostrarArchivoDeCanciones("Canciones.dat");
       iniciarMenu();
 
+    printf("Esto es un test\n");
     return 0;
 }
 
