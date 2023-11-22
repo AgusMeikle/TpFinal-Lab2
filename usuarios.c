@@ -3,7 +3,7 @@
 ///Dar de Alta usuarios en el Sistema
 void altaUsuarios(){
     system("cls");
-    imprimirCabecera(" << M u s i c - F y >>");
+    imprimirCabecera();
     printf("\n\n");
     printf("\t\t\t\t\t    << Alta de Usuario >>");
     int id = contarRegistros(arUsuarios, sizeof(stUsuario));
@@ -255,3 +255,48 @@ void siExisteEntoncesMostrar(char nombre[]){
     fclose(pArchUsuarios);
     }
 }
+
+void calificacion(Pila *calificaciones)
+{
+    int i=0, suma=0, flag=0, basura;
+    float promedio;
+    Pila dada;
+    inicpila(&dada);
+    printf("\n--------------------------------------\n");
+    do
+    {
+    printf("\nCalifique al sistema del 1 al 10: ");
+    leer(calificaciones);
+    if((tope(calificaciones)>10) || (tope(calificaciones)<0))
+    {
+        printf("Ha ingresado un numero no valido, intente nuevamente.");
+        basura = desapilar(calificaciones);
+    }
+    else
+    {
+        flag=1;
+        printf("Muchas gracias por calificarnos\n");
+        printf("--------------------------------------\n");
+    }
+    }while(flag==0);
+
+   while(!pilavacia(calificaciones))
+   {
+       apilar(&dada, desapilar(calificaciones));
+       suma = suma + tope(&dada);
+       i++;
+   }
+   while(!pilavacia(&dada))
+   {
+       apilar(calificaciones, desapilar(&dada));
+   }
+   promedio = (float) suma/i;
+
+    printf("\n--------------------------------------------\n");
+
+    printf("Calificacion promedio del sistema: %.2f\n", promedio);
+
+    printf("--------------------------------------------\n");
+
+}
+

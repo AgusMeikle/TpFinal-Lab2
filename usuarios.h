@@ -5,6 +5,7 @@
 #include <string.h>
 #define arUsuarios "Usuarios.dat" ///Constante utilizada en el nombre del archivo.
 #define arLogeado "Logeado.dat"///Guarda el usuario que ha iniciado sesion
+#include "pila.h"
 
 typedef struct{
     char nombreUsuario[30];
@@ -41,3 +42,4 @@ nodoArbol * inicArbol();
 nodoArbol *crearNodoArbol(stUsuario dato);
 nodoArbol * agregar(nodoArbol * arbolito, nodoArbol * nuevoNodo);
 void siExisteEntoncesMostrar(char nombre[]);
+void calificacion(Pila *calificaciones);

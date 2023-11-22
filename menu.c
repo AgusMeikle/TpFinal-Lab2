@@ -1,6 +1,6 @@
 #include "menu.h"
 #include "usuarios.h"
-
+#include "playlist.h"
 
 void iniciarMenu(){
     system("color A0");
@@ -67,7 +67,6 @@ int switchMenu1(){
                     printf("\n\n");
                     imprimirOpcionesMenu1();
                 }
-
                 break;
             case 2:
                 system("cls");
@@ -121,6 +120,8 @@ int switchMenu1(){
 }
 void switchMenuAdmin(){
     int op;
+    fila filita;
+    inicFila(&filita);
     do{
         op = ingresarOpcion();
         switch(op){
@@ -146,6 +147,17 @@ void switchMenuAdmin(){
             imprimirMenuAdministrarMusica();
             switchAdministrarMusica();
             break;
+        case 3:
+            system("cls");
+            imprimirCabecera();
+            archivoComenToFila(&filita);
+            mostrarFilaComents(&filita);
+            system("pause");
+            system("cls");
+            imprimirCabecera();
+            printf("\n\n");
+            imprimirMenuAdmin();
+            break;
         default:
             printf("\n\t\t\t\t-Opcion incorrecta.\n");
             printf("\n");
@@ -161,6 +173,10 @@ void switchMenuAdmin(){
 void switchMenuUsuario(char usuario[]){
 
     int op, validos=0;
+    fila filita;
+    inicFila(&filita);
+    Pila calificaciones;
+    inicpila(&calificaciones);
     playlist arreglo[10];
     inicArreglo(arreglo,10);
     validos = deArchivoToArreglo(arreglo,10);
@@ -201,6 +217,40 @@ void switchMenuUsuario(char usuario[]){
             imprimirCabecera();
             validos = cargarPlaylist(arreglo,validos,10,usuario);
             cargarPlaylistArchivo(arreglo, validos);
+            system("pause");
+            system("cls");
+            imprimirCabecera();
+            printf("\n\n");
+            imprimirMenuUsuario();
+            break;
+        case 4:
+            system("cls");
+            imprimirCabecera();
+            archivoComenToFila(&filita);
+            agregarMuchos(&filita, usuario);
+            system("pause");
+            system("cls");
+            imprimirCabecera();
+            printf("\n\n");
+            imprimirMenuUsuario();
+            break;
+        case 5:
+            system("cls");
+            imprimirCabecera();
+            archivoComenToFila(&filita);
+            mostrarFilaComents(&filita);
+            system("pause");
+            system("cls");
+            imprimirCabecera();
+            printf("\n\n");
+            imprimirMenuUsuario();
+            break;
+        case 6:
+            system("cls");
+            imprimirCabecera();
+            cargarPila(&calificaciones);
+            calificacion(&calificaciones);
+            pilaToArchi(&calificaciones);
             system("pause");
             system("cls");
             imprimirCabecera();
@@ -439,14 +489,18 @@ void imprimirMenuAdministrarMusica(){
     printf("   0. Volver\n");
 }
 void imprimirMenuAdmin(){
-    printf("   1. Administrar Usuarios\n");
-    printf("   2. Administrar Musica\n");
+    printf("   1. Administrar usuarios\n");
+    printf("   2. Administrar musica\n");
+    printf("   3. Ver comentarios\n");
     printf("   0. Salir\n");
 }
 void imprimirMenuUsuario(){
     printf("   1. Ver mi perfil\n");
     printf("   2. Ver mi playlist\n");
     printf("   3. Crear playlist\n");
+    printf("   4. Realizar comentarios\n");
+    printf("   5. Ver comentarios\n");
+    printf("   6. Calificar el sistema\n");
     printf("   0. Salir\n");
 }
 

@@ -2,7 +2,7 @@
 
 void altaCanciones(){   ///Dar de Alta canciones en el Sistema
     system("cls");
-    imprimirCabecera(" << M u s i c - F y >>");
+    imprimirCabecera();
     printf("\n\n");
     printf("\t\t\t\t\t  << Alta de canciones >>");
     int id = contarRegistros(arCanciones, sizeof(stCancion));

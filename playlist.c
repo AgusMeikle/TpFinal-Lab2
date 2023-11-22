@@ -73,28 +73,59 @@ int deArchivoToArreglo(playlist arreglo[], int dimension){
 
 int cargarPlaylist(playlist arreglo[], int validos, int dimension, char usuActual[]){ /// FUNCION PRINCIPAL DE PLAYLIST
 
-    int pos = verifiEnArr(arreglo,validos,usuActual);
-    int id;
+    int pos, id, flag=0;
+    char seguir;
     stCancion cancion;
     listaCancion * nuevoNodo;
-
+    mostrarListadoCanciones();
+    do
+    {
+        pos = verifiEnArr(arreglo,validos,usuActual);
     if (pos == -1) /// si la playlist no existe la creamos
     {
         strcpy(arreglo[validos].nombreUser, usuActual);
         pos = validos;
         validos ++;
     }
-    mostrarListadoCanciones();
     printf("\n Ingrese el id de la cancion que desea agregar.....: ");
     fflush(stdin);
     scanf("%i",&id);
 
-    cancion = buscarCancionPorId(id);
-    nuevoNodo = crearNodoCancion(cancion);
-    arreglo[pos].tema = agregarAlFinal(arreglo[pos].tema, nuevoNodo);
+    flag = buscarEnLista(arreglo[pos].tema,id);
 
 
+    if(flag == 0)
+    {
+        cancion = buscarCancionPorId(id);
+        nuevoNodo = crearNodoCancion(cancion);
+        arreglo[pos].tema = agregarAlFinal(arreglo[pos].tema, nuevoNodo);
+        printf("\nCancion agregada con exito. ");
+        printf("\nDesea agregar otra? ");
+        fflush(stdin);
+        scanf("%c",&seguir);
+    }
+    else
+    {
+        printf("\nLa cancion ya se encuentra en su playlist, intente nuevamente\n");
+    }
+
+    }while(seguir=='s');
     return validos;
+}
+
+int buscarEnLista(listaCancion *lista, int id)
+{
+    listaCancion *aux = lista;
+    int flag=0;
+    while(aux!=NULL)
+    {
+        if(aux->dato.idCancion == id)
+        {
+            flag=1;
+        }
+        aux = aux->siguiente;
+    }
+    return flag;
 }
 
 void cargarPlaylistArchivo(playlist arreglo[], int validos)
@@ -169,4 +200,184 @@ void recorrerArrPlaylist(playlist arreglo[],int validos, char usuario[])
 
         }
     }
+}
+
+/// FILA
+
+void agregarMuchos(fila * filita, char nombreUser[])
+{
+      char seguir;
+      stComentario dato;
+      listaComentarios * nuevoNodo;
+
+      do{
+
+            strcpy(dato.nombreUser,nombreUser);
+
+            printf("Ingrese la cancion que desea comentar: ");
+            fflush(stdin);
+            gets(dato.nombreCancion);
+
+            printf("Ingrese su comentario: ");
+            fflush(stdin);
+            gets(dato.comentarios);
+
+            nuevoNodo = crearNodoComentarios(dato);
+            agregarFila(filita,nuevoNodo);
+
+            printf("Desea cargar otro comentario? s/n: ");
+            fflush(stdin);
+            scanf("%c",&seguir);
+
+      }while(seguir=='s');
+
+      cargarComentariosArchi(filita->pri);
+}
+
+void cargarComentariosArchi(listaComentarios * listita)
+{
+      FILE * pArchComentarios = fopen(arComentarios,"wb");
+      stComentario dato;
+      listaComentarios * aux = listita;
+
+      if(pArchComentarios!=NULL){
+
+            while(aux!=NULL) // recorremos la lista
+            {
+                dato = aux->dato;
+                fwrite(&dato,sizeof(stComentario),1,pArchComentarios);
+                aux = aux->sig;
+            }
+        }
+        fclose(pArchComentarios);
+}
+
+void archivoComenToFila(fila * filita)
+{
+      FILE * pArchComentarios = fopen(arComentarios, "rb");
+      stComentario c;
+      listaComentarios * nuevoNodo;
+      if(pArchComentarios != NULL){
+
+        while(fread(&c, sizeof(stComentario), 1, pArchComentarios) > 0)
+        {
+            nuevoNodo = crearNodoComentarios(c);
+            agregarFila(filita,nuevoNodo);
+        }
+    fclose(pArchComentarios);
+      }
+}
+
+void inicFila(fila* filita)
+{
+    filita->pri=inicListaComentarios();
+    filita->ult=inicListaComentarios();
+}
+
+listaComentarios * inicListaComentarios()
+{
+      return NULL;
+}
+
+listaComentarios * crearNodoComentarios(stComentario dato)
+{
+      listaComentarios * nuevoNodo = (listaComentarios*)malloc(sizeof(listaComentarios));
+
+      nuevoNodo->dato = dato;
+
+      nuevoNodo->sig = NULL;
+
+      return nuevoNodo;
+}
+
+void agregarFila(fila* filita, listaComentarios *nuevoNodo)
+{
+    filita->ult=agregarAlFinalCom(filita->ult, nuevoNodo);
+
+    if(filita->pri==NULL)
+    {
+        filita->pri=filita->ult;
+    }
+    filita->ult=nuevoNodo;
+}
+
+
+listaComentarios * agregarAlFinalCom(listaComentarios * lista, listaComentarios* nuevoNodo)
+{
+    if(lista==NULL)
+    {
+        lista=nuevoNodo;
+    }
+    else
+    {
+        listaComentarios * ultimo = buscarUltimoR(lista);
+        ultimo->sig = nuevoNodo;
+    }
+    return lista;
+}
+
+listaComentarios * buscarUltimoR(listaComentarios * lista)
+{
+    listaComentarios * rta = NULL;
+    if(lista!=NULL)
+    {
+        if(lista->sig==NULL)
+        {
+            rta=lista;
+        }
+        else
+        {
+            rta=buscarUltimoR(lista->sig);
+        }
+    }
+    return rta;
+}
+
+listaComentarios * extraer(fila *filita)
+{
+    listaComentarios * resp;
+
+    if(filita->pri!=NULL)
+    {
+        resp = filita->pri;
+
+        filita->pri=borrarPrimero(filita->pri);
+
+        if(filita->pri==NULL)
+        {
+            filita->ult=inicListaComentarios();
+        }
+    }
+    return resp;
+}
+
+listaComentarios * borrarPrimero (listaComentarios * lista)
+{
+    listaComentarios * aux = lista;
+    if (lista!=NULL)
+    {
+        lista=lista->sig;
+        free(aux);
+    }
+    return lista;
+}
+
+void mostrarUnSoloComent(stComentario dato)
+{
+    printf("\tCancion: %s\n",dato.nombreCancion);
+    printf("\tUsuario: %s\n", dato.nombreUser);
+    printf("\tComentario: %s\n",dato.comentarios);
+}
+
+void mostrarFilaComents(fila* filita)
+{
+    listaComentarios* aux = filita->pri;
+    printf("\tCOMENTARIOS:\n\n");
+    while (aux != NULL)
+    {
+        mostrarUnSoloComent(aux->dato);
+        aux = aux->sig;
+    }
+
+    printf("\n____________________________________________\n");
 }
